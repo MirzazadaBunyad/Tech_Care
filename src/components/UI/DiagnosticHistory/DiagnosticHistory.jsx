@@ -223,27 +223,27 @@ function DiagnosticHistory() {
     return (
         <div className="mt-[32px] flex flex-col bg-white rounded-[16px]">
             <div>
-                <h1 className="font-[Manrope] font-extrabold text-[24px] m-[20px]">Diagnosis History</h1>
+                <h1 className="font-extrabold text-[24px] m-[20px]">Diagnosis History</h1>
                 <div className="flex flex-col gap-[20px]">
-                    <div className="bg-[#F4F0FE] flex gap-[32px] ml-[20px] rounded-[12px]">
-                        <div className="w-[70%] h-[300px] flex flex-col">
+                    <div className="bg-[#F4F0FE] flex gap-[32px] mx-[20px] rounded-[12px]">
+                        <div className="w-[70%] mb-[16px] h-[300px] flex flex-col">
                             <div className="flex justify-between items-center">
-                                <h2 className="font-[Manrope] outline-none text-[#072635] font-extrabold p-[16px] text-[18px]">Blood Pressure</h2>
+                                <h2 className="outline-none text-[#072635] font-extrabold p-[16px] text-[18px]">Blood Pressure</h2>
                                 <select name="" id="" className="p-[16px] border-none bg-transparent">
                                     <option value="" className="">Last 6 months</option>
                                 </select>
                             </div>
                             <Line className="px-[16px]" data={data} options={options} />
                         </div>
-                        <div className="w-[30%] flex flex-col gap-[33px] py-[16px]">
-                            <div className="flex flex-col gap-[8px]">
+                        <div className="w-[30%] flex flex-col gap-[16px] py-[16px] mx-[16px]">
+                            <div className="flex flex-col gap-[8px] border-b-[1px] border-b-[#CBC8D4] border-b-w-[200px]">
                                 <div className="flex gap-[4px] items-center">
                                     <div className="bg-[#E66FD2] border-[1px] border-white w-[14px] h-[14px] rounded-[50%]"></div>
                                     <h3>Systolic</h3>
                                 </div>
                                 <div>
-                                    <p className="font-[Manrope] font-bold text-[22px] text-[#072635]">{clickedSystolicValue !== null ? clickedSystolicValue : 'Click a systolic point to see the value'}</p>
-                                    <p className="font-[Manrope] text-[14px] flex gap-[8px]">
+                                    <p className="font-bold text-[22px] text-[#072635]">{clickedSystolicValue !== null ? clickedSystolicValue : 'Click a systolic point to see the value'}</p>
+                                    <p className="text-[14px] flex gap-[8px] pb-[16px]">
                                         <img src={ArrowUp} alt="" />
                                         {systolicLevels !== null ? systolicLevels : 'Click a systolic point to see the levels'}
                                     </p>
@@ -255,8 +255,8 @@ function DiagnosticHistory() {
                                     <h3>Diastolic</h3>
                                 </div>
                                 <div>
-                                    <p className="font-[Manrope] font-bold text-[22px] text-[#072635]">{clickedDiastolicValue !== null ? clickedDiastolicValue : 'Click a diastolic point to see the value'}</p>
-                                    <p className="font-[Manrope] text-[14px] flex gap-[8px]">
+                                    <p className="font-bold text-[22px] text-[#072635]">{clickedDiastolicValue !== null ? clickedDiastolicValue : 'Click a diastolic point to see the value'}</p>
+                                    <p className="text-[14px] flex gap-[8px]">
                                         <img src={ArrowDown} alt="" />
                                         {diastolicLevels !== null ? diastolicLevels : 'Click a diastolic point to see the levels'}
                                     </p>
@@ -264,15 +264,15 @@ function DiagnosticHistory() {
                             </div>
                         </div>
                     </div>
-                    <div className="flex gap-[21px] w-full">
-                        <div className="bg-[#E0F3FA] w-1/3 ml-[20px] flex flex-col p-[20px] rounded-[12px]">
+                    <div className="flex gap-[21px] w-full px-[20px] pb-[20px]">
+                        <div className="bg-[#E0F3FA] w-1/3 flex flex-col p-[20px] rounded-[12px]">
                             <div className=" w-[96px] h-[96px]">
                                 <img className="w-full h-full" src={RespiratoryRate} alt="Respiratory Rate" />
                             </div>
                             <div className="flex flex-col gap-[17px]">
                                 <div>
-                                    <h3 className="font-[Manrope] text-left font-medium text-[16px] text-[#072635]">Respiratory Rate</h3>
-                                    <p className="font-[Manrope] font-extrabold text-[#072635] text-left text-[30px]">{respiratoryRateValue !== null ? respiratoryRateValue : 'Click a point to see the respiratory rate'} bpm</p>
+                                    <h3 className="text-left font-medium text-[16px] text-[#072635]">Respiratory Rate</h3>
+                                    <p className="font-extrabold text-[#072635] text-left text-[30px]">{respiratoryRateValue !== null ? respiratoryRateValue : 'Click a point to see the respiratory rate'} bpm</p>
                                 </div>
                                 <div>
                                     <p>{respiratoryRateLevels !== null ? respiratoryRateLevels : 'Click a point to see the levels'}</p>
@@ -285,8 +285,8 @@ function DiagnosticHistory() {
                             </div>
                             <div className="flex flex-col gap-[17px]">
                                 <div>
-                                    <h3 className="font-[Manrope] text-left font-medium text-[16px] text-[#072635]">Temperature</h3>
-                                    <p className="font-[Manrope] font-extrabold text-[#072635] text-left text-[30px]">{temperatureValue !== null ? temperatureValue : 'Click a point to see the respiratory rate'}°F</p>
+                                    <h3 className="text-left font-medium text-[16px] text-[#072635]">Temperature</h3>
+                                    <p className="font-extrabold text-[#072635] text-left text-[30px]">{temperatureValue !== null ? temperatureValue : 'Click a point to see the respiratory rate'}°F</p>
                                 </div>
                                 <div>
                                     <p>{temperatureLevels !== null ? temperatureLevels : 'Click a point to see the levels'}</p>
@@ -299,8 +299,8 @@ function DiagnosticHistory() {
                             </div>
                             <div className="flex flex-col gap-[17px]">
                                 <div>
-                                    <h3 className="font-[Manrope] text-left font-medium text-[16px] text-[#072635]">Heart Rate</h3>
-                                    <p className="font-[Manrope] font-extrabold text-[#072635] text-left text-[30px]">{heartRateValue !== null ? heartRateValue : 'Click a point to see the respiratory rate'} bpm</p>
+                                    <h3 className="text-left font-medium text-[16px] text-[#072635]">Heart Rate</h3>
+                                    <p className="font-extrabold text-[#072635] text-left text-[30px]">{heartRateValue !== null ? heartRateValue : 'Click a point to see the respiratory rate'} bpm</p>
                                 </div>
                                 <div>
                                     <p>{heartRateLevels !== null ? heartRateLevels : 'Click a point to see the levels'}</p>

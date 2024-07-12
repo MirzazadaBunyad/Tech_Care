@@ -40,19 +40,19 @@ function Profile() {
         return <div>Loading...</div>;
     }
     return (
-        <div className="flex flex-col gap-[32px] mt-[18px]">
+        <div className="flex flex-col gap-[32px] mt-[18px] bg-[#FFFFFF] rounded-[16px]">
             <div className="flex gap-[10px] mt-[32px] flex-col items-center justify-center">
                 <img src={profileData?.profile_picture} className="w-[200px] h-[200px]" alt="" />
-                <h2 className="font-[Manrope] text-[#072635] font-bold text-[24px] text-center">{profileData?.name}</h2>
+                <h2 className="text-[#072635] font-bold text-[24px] text-center">{profileData?.name}</h2>
             </div>
-            <div className="ml-[10px] flex flex-col gap-[24px]">
+            <div className="ml-[20px] flex flex-col gap-[24px]">
                 <div className="flex gap-[16px] justify-start items-center">
                     <div>
                         <img src={BirthIcon} alt="" />
                     </div>
                     <div className="flex flex-col gap-[4px]">
-                        <h5 className="font-[Manrope] text-[#072635] text-[14px]">Date Of Birth</h5>
-                        <p className="font-[Manrope] font-bold text-[#072635] text-[14px]">{profileData?.date_of_birth}</p>
+                        <h5 className="text-[#072635] text-[14px]">Date Of Birth</h5>
+                        <p className="font-bold text-[#072635] text-[14px]">{profileData?.date_of_birth}</p>
                     </div>
                 </div>
                 <div className="flex gap-[16px] justify-start items-center">
@@ -60,8 +60,8 @@ function Profile() {
                         <img src={FemaleIcon} alt="" />
                     </div>
                     <div className="flex flex-col gap-[4px]">
-                        <h5 className="font-[Manrope] text-[#072635] text-[14px]">Gender</h5>
-                        <p className="font-[Manrope] font-bold text-[#072635] text-[14px]">{profileData?.gender}</p>
+                        <h5 className="text-[#072635] text-[14px]">Gender</h5>
+                        <p className="font-bold text-[#072635] text-[14px]">{profileData?.gender}</p>
                     </div>
                 </div>
                 <div className="flex gap-[16px] justify-start items-center">
@@ -69,8 +69,8 @@ function Profile() {
                         <img src={PhoneIcon} alt="" />
                     </div>
                     <div className="flex flex-col gap-[4px]">
-                        <h5 className="font-[Manrope] text-[#072635] text-[14px]">Contact Info.</h5>
-                        <p className="font-[Manrope] font-bold text-[#072635] text-[14px]">{profileData?.phone_number}</p>
+                        <h5 className="text-[#072635] text-[14px]">Contact Info.</h5>
+                        <p className="font-bold text-[#072635] text-[14px]">{profileData?.phone_number}</p>
                     </div>
                 </div>
                 <div className="flex gap-[16px] justify-start items-center">
@@ -78,8 +78,8 @@ function Profile() {
                         <img src={PhoneIcon} alt="" />
                     </div>
                     <div className="flex flex-col gap-[4px]">
-                        <h5 className="font-[Manrope] text-[#072635] text-[14px]">Emergency Contacts</h5>
-                        <p className="font-[Manrope] font-bold text-[#072635] text-[14px]">{profileData?.emergency_contact}</p>
+                        <h5 className="text-[#072635] text-[14px]">Emergency Contacts</h5>
+                        <p className="font-bold text-[#072635] text-[14px]">{profileData?.emergency_contact}</p>
                     </div>
                 </div>
                 <div className="flex gap-[16px] justify-start items-center">
@@ -87,13 +87,13 @@ function Profile() {
                         <img src={InsuranceIcon} alt="" />
                     </div>
                     <div className="flex flex-col gap-[4px]">
-                        <h5 className="font-[Manrope] text-[#072635] text-[14px]">Insurance Provider</h5>
-                        <p className="font-[Manrope] font-bold text-[#072635] text-[14px]">{profileData?.insurance_type}</p>
+                        <h5 className="text-[#072635] text-[14px]">Insurance Provider</h5>
+                        <p className="font-bold text-[#072635] text-[14px]">{profileData?.insurance_type}</p>
                     </div>
                 </div>
             </div>
-            <div className="flex justify-center">
-                <button className="px-[40px] py-[11px] bg-[#01F0D0] rounded-[41px] text-[14px] font-[Manrope] font-bold">Show All Information</button>
+            <div className="flex justify-center mb-[32px]">
+                <button className="px-[40px] py-[11px] bg-[#01F0D0] rounded-[41px] text-[14px] font-bold">Show All Information</button>
             </div>
         </div>
     )

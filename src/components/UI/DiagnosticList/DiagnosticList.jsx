@@ -36,20 +36,20 @@ function DiagnosticList() {
 
     const diagnos = fetchedData[3].diagnostic_list;
 
-    return <div className="my-[32px] flex flex-col gap-[32px] bg-white rounded-[16px] ml-3">
-        <h2 className="font-[Manrope] font-extrabold text-[24px] m-[20px]">Diagnostic List</h2>
-        <div className="ml-[16px] w-full">
-            <div className="flex justify-between items-center py-[15px] pl-[15px]">
-                <span className="w-[30%] font-bold text-[14px] font-[Manrope] text-left">Problem/Diagnosis</span>
-                <span className="w-[55%] font-bold text-[14px] font-[Manrope] text-left">Description</span>
-                <span className="w-[15%] font-bold text-[14px] font-[Manrope] text-left">Status</span>
+    return <div className="flex flex-col gap-[32px] bg-white rounded-[16px]">
+        <h2 className="font-extrabold text-[24px] ml-[20px] mt-[20px]">Diagnostic List</h2>
+        <div className="mx-[16px] mb-[16px] flex flex-col gap-[10px]">
+            <div className="flex justify-between items-center  py-[8px] pl-[15px] bg-[#F6F7F8] rounded-[24px]">
+                <span className="w-[30%] font-bold text-[14px] text-left">Problem/Diagnosis</span>
+                <span className="w-[49%] font-bold text-[14px] text-left">Description</span>
+                <span className="w-[18%] font-bold text-[14px] text-left">Status</span>
             </div>
-            <div className="max-h-[200px] overflow-y-auto custom-scrollbar">
+            <div className="max-h-[150px] overflow-y-auto custom-scrollbar">
                 {diagnos.map((diagnosis, index) => (
                     <div key={index} className="flex justify-between items-center pr-[23px] pl-[15px]">
-                        <span className="w-[30%] py-[20px] text-[14px] font-[Manrope] text-left">{diagnosis.name}</span>
-                        <span className="w-[55%] py-[20px] text-[14px] font-[Manrope] text-left">{diagnosis.description}</span>
-                        <span className="w-[15%] py-[20px] text-[14px] font-[Manrope] text-left">{diagnosis.status}</span>
+                        <span className="w-[30%] py-[10px] text-[14px] text-left">{diagnosis.name}</span>
+                        <span className="w-[50%] py-[10px] text-[14px] text-left">{diagnosis.description}</span>
+                        <span className="w-[15%] py-[10px] text-[14px] text-left">{diagnosis.status}</span>
                     </div>
                 ))}
             </div>

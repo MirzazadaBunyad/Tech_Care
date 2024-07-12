@@ -37,12 +37,12 @@ function LabResults() {
         return <div>Loading...</div>;
     }
     return (
-        <div className="flex flex-col gap-[16px]">
-            <h2 className="font-[Manrope] text-[#072635] font-bold text-[24px] ml-[20px]">Lab Results</h2>
+        <div className="flex flex-col bg-[#FFF] gap-[16px] rounded-[16px]">
+            <h2 className="text-[#072635] font-bold text-[24px] ml-[20px] mt-[20px]">Lab Results</h2>
             <div className="ml-[20px] flex flex-col gap-[5px] max-h-[220px] overflow-y-auto custom-scrollbar">
                 {labResData.map((item, index) => (
                     <div key={index} className="flex gap-[10px] justify-between pl-[16px] py-[10px]">
-                        <p className="font-[Manrope] text-left text-[#072635] text-[13px]">{item}</p>
+                        <p className="text-left text-[#072635] text-[13px]">{item}</p>
                         <button className="mr-[16px]">
                             <img className="w-[20px] h-[20px]" src={DownloadIcon} alt="Download Icon" />
                         </button>

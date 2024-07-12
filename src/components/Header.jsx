@@ -19,31 +19,31 @@ function Header() {
                     <li className=" cursor-pointer">
                         <a href="/" className="flex gap-[9px] items-center">
                             <img className="w-[16px] h-[17px]" src={HomeLogo} alt="Home" />
-                            <p className="font-[Manrope] font-bold text-[14px] text-[#072635]">Overview</p>
+                            <p className="font-bold text-[14px] text-[#072635]">Overview</p>
                         </a>
                     </li>
                     <li className="flex gap-[9px] items-center cursor-pointer bg-[#01F0D0] rounded-[41px] py-[11px] px-[16px]  ">
                         <a href="/" className="flex gap-[9px] items-center">
                             <img src={GroupLogo} alt="Group" />
-                            <p>Patients</p>
+                            <p className="font-bold text-[14px] text-[#072635]">Patients</p>
                         </a>
                     </li>
                     <li className="flex gap-[9px] items-center cursor-pointer">
                         <a href="/" className="flex gap-[9px] items-center">
                             <img src={CalendarLogo} alt="Calendar" />
-                            <p>Schedule</p>
+                            <p className="font-bold text-[14px] text-[#072635]">Schedule</p>
                         </a>
                     </li>
                     <li className="flex gap-[9px] items-center cursor-pointer">
                         <a href="/" className="flex gap-[9px] items-center">
                             <img src={ChatLogo} alt="Chat" />
-                            <p>Message</p>
+                            <p className="font-bold text-[14px] text-[#072635]">Message</p>
                         </a>
                     </li>
                     <li className="flex gap-[9px] items-center cursor-pointer">
                         <a href="/" className="flex gap-[9px] items-center">
                             <img src={CreditCard} alt="Credit_Card" />
-                            <p>Transactions</p>
+                            <p className="font-bold text-[14px] text-[#072635]">Transactions</p>
                         </a>
                     </li>
                 </ul>
@@ -54,8 +54,8 @@ function Header() {
                         <img className="w-[44px] h-[44px]" src={Profile} alt="" />
                     </div>
                     <div className="pr-[12px]">
-                        <h3 className="font-[Manrope] font-bold text-[14px] text-[#072635]">Dr. Jose Simmons</h3>
-                        <h5 className="font-[Manrope] font-normal text-[14px] text-[#707070]">General Practitioner</h5>
+                        <h3 className="font-bold text-[14px] text-[#072635]">Dr. Jose Simmons</h3>
+                        <h5 className="font-normal text-[14px] text-[#707070]">General Practitioner</h5>
                     </div>
                 </div>
                 <div className="flex items-center gap-[12px] pl-[12px]">
