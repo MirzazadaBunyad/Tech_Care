@@ -2,3 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
+* {
+    font-family: 'Manrope', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #E3E4E6;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #072635;
+    border-radius: 3px;
+    border: 2px solid #f1f1f1;
+}

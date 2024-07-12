@@ -5,10 +5,47 @@ import Ryhan from "../../public/assets/Ryhan.png";
 import Brandon from "../../public/assets/Brandon.png";
 import Jessica from "../../public/assets/Jessica.png";
 import Samantha from "../../public/assets/Samantha.png";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function Aside() {
+
+    const [fetchedData, setFetchedData] = useState(null);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const username = 'coalition';
+                const password = 'skills-test';
+                const auth = btoa(`${username}:${password}`);
+                const response = await axios.get("https://fedskillstest.coalitiontechnologies.workers.dev", {
+                    headers: {
+                        'Authorization': `Basic ${auth}`
+                    }
+                });
+                setFetchedData(response.data);
+            } catch (error) {
+                setError(error);
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const names = fetchedData ? fetchedData.map(person => person.name) : [];
+    console.log(names);
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
+
+    if (!fetchedData) {
+        return <div>Loading...</div>;
+    }
     return (
-        <aside className="bg-white my-[32px] w-[23%] rounded-[16px]">
+        <aside className="bg-white my-[32px] w-[20%] rounded-[16px]">
             <div className="flex justify-between px-[20px] pt-[20px] items-center">
                 <h2 className="font-[Manrope] font-extrabold text-[24px]">Patients</h2>
                 <button>
