@@ -3,6 +3,10 @@ import Header from "./components/Header";
 import Main from "./components/Main";
 
 function App() {
+  if (!('process' in window)) {
+    // @ts-ignore
+    window.process = {}
+  }
   return (
     <div className="bg-[#F6F7F8] m-[18px]">
       <Header />

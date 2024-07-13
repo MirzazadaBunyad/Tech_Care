@@ -1,4 +1,26 @@
-import { Line } from "react-chartjs-2";
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Line } from 'react-chartjs-2';
+import { parse, format } from 'date-fns';
+import {
+    fetchDiagnosticHistory,
+    setClickedSystolicValue,
+    setClickedDiastolicValue,
+    setSystolicLevels,
+    setDiastolicLevels,
+    setRespiratoryRateValue,
+    setRespiratoryRateLevels,
+    setTemperatureValue,
+    setTemperatureLevels,
+    setHeartRateValue,
+    setHeartRateLevels,
+} from '../../../ReduxToolkit/Features/dataSlice';
+import ArrowUp from '../../../../public/assets/ArrowUp.svg';
+import ArrowDown from '../../../../public/assets/ArrowDown.svg';
+import RespiratoryRate from '../../../../public/assets/RespiratoryRate.svg';
+import Temperature from '../../../../public/assets/temperature.svg';
+import HeartBPM from '../../../../public/assets/HeartBPM.svg';
+
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -6,110 +28,92 @@ import {
     PointElement,
     LineElement,
     Tooltip,
-} from "chart.js";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { parse, format } from "date-fns";
-import ArrowUp from "../../../../public/assets/ArrowUp.svg";
-import ArrowDown from "../../../../public/assets/ArrowDown.svg";
-import RespiratoryRate from "../../../../public/assets/RespiratoryRate.svg";
-import Temperature from "../../../../public/assets/temperature.svg";
-import HeartBPM from "../../../../public/assets/HeartBPM.svg";
+} from 'chart.js';
 
 ChartJS.register(
     CategoryScale,
     LinearScale,
     PointElement,
     LineElement,
-    Tooltip
+    Tooltip,
 );
 
-function DiagnosticHistory() {
-    const [fetchedData, setFetchedData] = useState(null);
-    const [error, setError] = useState(null);
-    const [clickedSystolicValue, setClickedSystolicValue] = useState(null);
-    const [clickedDiastolicValue, setClickedDiastolicValue] = useState(null);
-    const [systolicLevels, setSystolicLevels] = useState([]);
-    const [diastolicLevels, setDiastolicLevels] = useState([]);
-    const [respiratoryRateValue, setRespiratoryRateValue] = useState(null);
-    const [respiratoryRateLevels, setRespiratoryRateLevels] = useState([]);
-    const [temperatureValue, setTemperatureValue] = useState(null);
-    const [temperatureLevels, setTemperatureLevels] = useState([]);
-    const [heartRateValue, setHeartRateValue] = useState(null);
-    const [heartRateLevels, setHeartRateLevels] = useState([]);
+const formatMonth = (month, year) => {
+    const date = parse(`${month} ${year}`, 'MMMM yyyy', new Date());
+    return format(date, 'MMM, yyyy');
+};
+
+const DiagnosticHistory = () => {
+    const dispatch = useDispatch();
+    const {
+        fetchedData,
+        error,
+        clickedSystolicValue,
+        clickedDiastolicValue,
+        systolicLevels,
+        diastolicLevels,
+        respiratoryRateValue,
+        respiratoryRateLevels,
+        temperatureValue,
+        temperatureLevels,
+        heartRateValue,
+        heartRateLevels,
+    } = useSelector((state) => state.data.diagnosticHistory);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const username = 'coalition';
-                const password = 'skills-test';
-                const auth = btoa(`${username}:${password}`);
-                const response = await axios.get("https://fedskillstest.coalitiontechnologies.workers.dev", {
-                    headers: {
-                        'Authorization': `Basic ${auth}`
-                    }
-                });
-                setFetchedData(response.data);
-            } catch (error) {
-                setError(error);
-                console.error("Error fetching data:", error);
-            }
-        };
-
-        fetchData();
-    }, []);
+        dispatch(fetchDiagnosticHistory());
+    }, [dispatch]);
 
     useEffect(() => {
         if (!fetchedData) return;
+
         const diagnosisHistory = fetchedData[3].diagnosis_history.slice(0, 6).reverse();
-        const systolicValues = diagnosisHistory.map(record => record.blood_pressure.systolic.value);
-        const diastolicValues = diagnosisHistory.map(record => record.blood_pressure.diastolic.value);
-        const systolicLevels = diagnosisHistory.map(record => record.blood_pressure.systolic.levels);
-        const diastolicLevels = diagnosisHistory.map(record => record.blood_pressure.diastolic.levels);
 
-        if (systolicValues.length > 0) {
-            setClickedSystolicValue(systolicValues[0]);
-            setSystolicLevels(systolicLevels[0]);
-            setClickedDiastolicValue(diastolicValues[0]);
-            setDiastolicLevels(diastolicLevels[0]);
-            setRespiratoryRateValue(diagnosisHistory[0].respiratory_rate.value);
-            setRespiratoryRateLevels(diagnosisHistory[0].respiratory_rate.levels);
-            setTemperatureValue(diagnosisHistory[0].temperature.value);
-            setTemperatureLevels(diagnosisHistory[0].temperature.levels);
-            setHeartRateValue(diagnosisHistory[0].heart_rate.value);
-            setHeartRateLevels(diagnosisHistory[0].heart_rate.levels);
-        }
-    }, [fetchedData]);
+        const initialValues = {
+            systolic: diagnosisHistory[0].blood_pressure.systolic.value,
+            diastolic: diagnosisHistory[0].blood_pressure.diastolic.value,
+            systolicLevels: diagnosisHistory[0].blood_pressure.systolic.levels,
+            diastolicLevels: diagnosisHistory[0].blood_pressure.diastolic.levels,
+            respiratoryRate: diagnosisHistory[0].respiratory_rate.value,
+            respiratoryRateLevels: diagnosisHistory[0].respiratory_rate.levels,
+            temperature: diagnosisHistory[0].temperature.value,
+            temperatureLevels: diagnosisHistory[0].temperature.levels,
+            heartRate: diagnosisHistory[0].heart_rate.value,
+            heartRateLevels: diagnosisHistory[0].heart_rate.levels,
+        };
 
-    if (error) {
-        return <div>Error: {error.message}</div>;
-    }
+        dispatch(setClickedSystolicValue(initialValues.systolic));
+        dispatch(setSystolicLevels(initialValues.systolicLevels));
+        dispatch(setClickedDiastolicValue(initialValues.diastolic));
+        dispatch(setDiastolicLevels(initialValues.diastolicLevels));
+        dispatch(setRespiratoryRateValue(initialValues.respiratoryRate));
+        dispatch(setRespiratoryRateLevels(initialValues.respiratoryRateLevels));
+        dispatch(setTemperatureValue(initialValues.temperature));
+        dispatch(setTemperatureLevels(initialValues.temperatureLevels));
+        dispatch(setHeartRateValue(initialValues.heartRate));
+        dispatch(setHeartRateLevels(initialValues.heartRateLevels));
+    }, [fetchedData, dispatch]);
 
-    if (!fetchedData) {
-        return <div>Loading...</div>;
-    }
+    if (error) return <div>Error: {error.message}</div>;
+    if (!fetchedData) return <div>Loading...</div>;
 
     const diagnosisHistory = fetchedData[3].diagnosis_history.slice(0, 6).reverse();
-    const diastolicValues = diagnosisHistory.map(record => record.blood_pressure.diastolic.value);
-
-    const formatMonth = (month, year) => {
-        const date = parse(`${month} ${year}`, 'MMMM yyyy', new Date());
-        return format(date, 'MMM, yyyy');
-    };
 
     const labels = diagnosisHistory.map(record => formatMonth(record.month, record.year));
+    const systolicValues = diagnosisHistory.map(record => record.blood_pressure.systolic.value);
+    const diastolicValues = diagnosisHistory.map(record => record.blood_pressure.diastolic.value);
 
     const data = {
-        labels: labels,
+        labels,
         datasets: [
             {
                 label: 'Systolic',
-                data: diagnosisHistory.map(record => record.blood_pressure.systolic.value),
+                data: systolicValues,
                 backgroundColor: 'transparent',
                 borderColor: '#E66FD2',
                 pointBackgroundColor: '#C26EB4',
                 pointBorderWidth: 6,
-                tension: 0.5
+                tension: 0.5,
             },
             {
                 label: 'Diastolic',
@@ -118,26 +122,26 @@ function DiagnosticHistory() {
                 borderColor: '#8C6FE6',
                 pointBackgroundColor: '#6EB4C2',
                 pointBorderWidth: 6,
-                tension: 0.5
-            }
-        ]
+                tension: 0.5,
+            },
+        ],
     };
 
     const options = {
         responsive: true,
         plugins: {
             legend: {
-                display: true
+                display: true,
             },
             tooltip: {
                 enabled: true,
-            }
+            },
         },
         scales: {
             x: {
                 grid: {
-                    display: false
-                }
+                    display: false,
+                },
             },
             y: {
                 min: 60,
@@ -148,172 +152,147 @@ function DiagnosticHistory() {
                 },
                 grid: {
                     borderDash: [10],
+                },
+            },
+        },
+        onClick: (e, elements) => {
+            if (elements.length > 0) {
+                const chart = elements[0].element.$context.chart;
+                const { datasetIndex, index } = elements[0];
+                const value = chart.data.datasets[datasetIndex].data[index];
+
+                const record = diagnosisHistory.find((rec) => {
+                    if (datasetIndex === 0) {
+                        return rec.blood_pressure.systolic.value === value;
+                    }
+                    return rec.blood_pressure.diastolic.value === value;
+                });
+
+                if (record) {
+                    if (datasetIndex === 0) {
+                        dispatch(setClickedSystolicValue(value));
+                        dispatch(setSystolicLevels(record.blood_pressure.systolic.levels));
+                    } else {
+                        dispatch(setClickedDiastolicValue(value));
+                        dispatch(setDiastolicLevels(record.blood_pressure.diastolic.levels));
+                    }
+
+                    dispatch(setRespiratoryRateValue(record.respiratory_rate.value));
+                    dispatch(setRespiratoryRateLevels(record.respiratory_rate.levels));
+                    dispatch(setTemperatureValue(record.temperature.value));
+                    dispatch(setTemperatureLevels(record.temperature.levels));
+                    dispatch(setHeartRateValue(record.heart_rate.value));
+                    dispatch(setHeartRateLevels(record.heart_rate.levels));
+                } else {
+                    if (datasetIndex === 0) {
+                        dispatch(setClickedSystolicValue(null));
+                        dispatch(setSystolicLevels([]));
+                    } else {
+                        dispatch(setClickedDiastolicValue(null));
+                        dispatch(setDiastolicLevels([]));
+                    }
+
+                    dispatch(setRespiratoryRateValue(null));
+                    dispatch(setRespiratoryRateLevels([]));
+                    dispatch(setTemperatureValue(null));
+                    dispatch(setTemperatureLevels([]));
+                    dispatch(setHeartRateValue(null));
+                    dispatch(setHeartRateLevels([]));
                 }
             }
         },
-        onClick: async (e, elements) => {
-            if (elements.length > 0) {
-                const chart = elements[0].element.$context.chart;
-                const datasetIndex = elements[0].datasetIndex;
-                const index = elements[0].index;
-                const value = chart.data.datasets[datasetIndex].data[index];
-
-                try {
-                    const username = 'coalition';
-                    const password = 'skills-test';
-                    const auth = btoa(`${username}:${password}`);
-                    const response = await axios.get("https://fedskillstest.coalitiontechnologies.workers.dev", {
-                        headers: {
-                            'Authorization': `Basic ${auth}`
-                        }
-                    });
-                    const diagnosisHistory = response.data[3].diagnosis_history.slice(0, 6).reverse();
-
-                    if (datasetIndex === 0) { // Systolic
-                        const systolicRecord = diagnosisHistory.find(record => record.blood_pressure.systolic.value === value);
-                        if (systolicRecord) {
-                            setClickedSystolicValue(value);
-                            setSystolicLevels(systolicRecord.blood_pressure.systolic.levels);
-                            setRespiratoryRateValue(systolicRecord.respiratory_rate.value);
-                            setRespiratoryRateLevels(systolicRecord.respiratory_rate.levels);
-                            setTemperatureValue(systolicRecord.temperature.value);
-                            setTemperatureLevels(systolicRecord.temperature.levels);
-                            setHeartRateValue(systolicRecord.heart_rate.value);
-                            setHeartRateLevels(systolicRecord.heart_rate.levels);
-                        } else {
-                            setClickedSystolicValue(null);
-                            setSystolicLevels([]);
-                            setRespiratoryRateValue(null);
-                            setRespiratoryRateLevels([]);
-                            setTemperatureValue(null);
-                            setTemperatureLevels([]);
-                            setHeartRateValue(null);
-                            setHeartRateLevels([]);
-                        }
-                    } else if (datasetIndex === 1) { // Diastolic
-                        const diastolicRecord = diagnosisHistory.find(record => record.blood_pressure.diastolic.value === value);
-                        if (diastolicRecord) {
-                            setClickedDiastolicValue(value);
-                            setDiastolicLevels(diastolicRecord.blood_pressure.diastolic.levels);
-                            setRespiratoryRateValue(diastolicRecord.respiratory_rate.value);
-                            setRespiratoryRateLevels(diastolicRecord.respiratory_rate.levels);
-                            setTemperatureValue(diastolicRecord.temperature.value);
-                            setTemperatureLevels(diastolicRecord.temperature.levels);
-                            setHeartRateValue(diastolicRecord.heart_rate.value);
-                            setHeartRateLevels(diastolicRecord.heart_rate.levels);
-                        } else {
-                            setClickedDiastolicValue(null);
-                            setDiastolicLevels([]);
-                            setRespiratoryRateValue(null);
-                            setRespiratoryRateLevels([]);
-                            setTemperatureValue(null);
-                            setTemperatureLevels([]);
-                            setHeartRateValue(null);
-                            setHeartRateLevels([]);
-                        }
-                    }
-                } catch (error) {
-                    setError(error);
-                    console.error("Error fetching data:", error);
-                }
-            }
-        }
     };
 
     return (
         <div className="mt-[32px] flex flex-col bg-white rounded-[16px]">
-            <div>
-                <h1 className="font-extrabold text-[24px] m-[20px]">Diagnosis History</h1>
-                <div className="flex flex-col gap-[20px]">
-                    <div className="bg-[#F4F0FE] flex gap-[32px] mx-[20px] rounded-[12px]">
-                        <div className="w-[70%] mb-[16px] h-[300px] flex flex-col">
-                            <div className="flex justify-between items-center">
-                                <h2 className="outline-none text-[#072635] font-extrabold p-[16px] text-[18px]">Blood Pressure</h2>
-                                <select name="" id="" className="p-[16px] border-none bg-transparent">
-                                    <option value="" className="">Last 6 months</option>
-                                </select>
-                            </div>
-                            <Line className="px-[16px]" data={data} options={options} />
+            <h1 className="font-bold text-[24px] m-[20px] text-left">Diagnosis History</h1>
+            <div className="flex flex-col gap-[20px]">
+                <div className="bg-[#F4F0FE] flex gap-[32px] mx-[20px] rounded-[12px]">
+                    <div className="w-[70%] mb-[16px] h-[300px] flex flex-col">
+                        <div className="flex justify-between items-center">
+                            <h2 className="font-bold p-[16px] text-[18px] text-left">Blood Pressure</h2>
+                            <select className="p-[16px] border-none bg-transparent outline-none">
+                                <option value="" className="text-[14px] text-right">Last 6 months</option>
+                            </select>
                         </div>
-                        <div className="w-[30%] flex flex-col gap-[16px] py-[16px] mx-[16px]">
-                            <div className="flex flex-col gap-[8px] border-b-[1px] border-b-[#CBC8D4] border-b-w-[200px]">
-                                <div className="flex gap-[4px] items-center">
-                                    <div className="bg-[#E66FD2] border-[1px] border-white w-[14px] h-[14px] rounded-[50%]"></div>
-                                    <h3>Systolic</h3>
-                                </div>
-                                <div>
-                                    <p className="font-bold text-[22px] text-[#072635]">{clickedSystolicValue !== null ? clickedSystolicValue : 'Click a systolic point to see the value'}</p>
-                                    <p className="text-[14px] flex gap-[8px] pb-[16px]">
-                                        <img src={ArrowUp} alt="" />
-                                        {systolicLevels !== null ? systolicLevels : 'Click a systolic point to see the levels'}
-                                    </p>
-                                </div>
+                        <Line className="px-[16px]" data={data} options={options} />
+                    </div>
+                    <div className="w-[30%] flex flex-col gap-[16px] py-[16px] mx-[16px]">
+                        <div className="flex flex-col gap-[8px] border-b-[1px] border-b-[#CBC8D4] border-b-w-[200px]">
+                            <div className="flex gap-[4px] items-center">
+                                <div className="bg-[#E66FD2] border-[1px] border-white w-[14px] h-[14px] rounded-[50%]"></div>
+                                <h3 className="text-left text-[14px] font-bold">Systolic</h3>
                             </div>
-                            <div className="flex flex-col gap-[8px]">
-                                <div className="flex gap-[4px] items-center">
-                                    <div className="bg-[#8C6FE6] border-[1px] border-white w-[14px] h-[14px] rounded-[50%]"></div>
-                                    <h3>Diastolic</h3>
-                                </div>
-                                <div>
-                                    <p className="font-bold text-[22px] text-[#072635]">{clickedDiastolicValue !== null ? clickedDiastolicValue : 'Click a diastolic point to see the value'}</p>
-                                    <p className="text-[14px] flex gap-[8px]">
-                                        <img src={ArrowDown} alt="" />
-                                        {diastolicLevels !== null ? diastolicLevels : 'Click a diastolic point to see the levels'}
-                                    </p>
-                                </div>
+                            <div>
+                                <p className="font-bold text-[22px] text-left">{clickedSystolicValue ?? 'Click a systolic point to see the value'}</p>
+                                <p className="text-[14px] flex gap-[8px] pb-[16px]">
+                                    <img src={ArrowUp} alt="" />
+                                    {systolicLevels ?? 'Click a systolic point to see the levels'}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-[8px]">
+                            <div className="flex gap-[4px] items-center">
+                                <div className="bg-[#8C6FE6] border-[1px] border-white w-[14px] h-[14px] rounded-[50%]"></div>
+                                <h3 className="text-left text-[14px] font-bold">Diastolic</h3>
+                            </div>
+                            <div>
+                                <p className="font-bold text-[22px]">{clickedDiastolicValue ?? 'Click a diastolic point to see the value'}</p>
+                                <p className="text-[14px] flex gap-[8px]">
+                                    <img src={ArrowDown} alt="" />
+                                    {diastolicLevels ?? 'Click a diastolic point to see the levels'}
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <div className="flex gap-[21px] w-full px-[20px] pb-[20px]">
-                        <div className="bg-[#E0F3FA] w-1/3 flex flex-col p-[20px] rounded-[12px]">
-                            <div className=" w-[96px] h-[96px]">
-                                <img className="w-full h-full" src={RespiratoryRate} alt="Respiratory Rate" />
+                </div>
+                <div className="flex gap-[21px] w-full px-[20px] pb-[20px]">
+                    <div className="bg-[#E0F3FA] w-1/3 flex flex-col p-[20px] gap-[16px] rounded-[12px]">
+                        <div className=" w-[96px] h-[96px]">
+                            <img className="w-full h-full" src={RespiratoryRate} alt="Respiratory Rate" />
+                        </div>
+                        <div className="flex flex-col gap-[16px]">
+                            <div>
+                                <h3 className="text-left font-medium text-[16px]">Respiratory Rate</h3>
+                                <p className="font-bold text-left text-[30px]">{respiratoryRateValue ?? 'Click a point to see the respiratory rate'} bpm</p>
                             </div>
-                            <div className="flex flex-col gap-[17px]">
-                                <div>
-                                    <h3 className="text-left font-medium text-[16px] text-[#072635]">Respiratory Rate</h3>
-                                    <p className="font-extrabold text-[#072635] text-left text-[30px]">{respiratoryRateValue !== null ? respiratoryRateValue : 'Click a point to see the respiratory rate'} bpm</p>
-                                </div>
-                                <div>
-                                    <p>{respiratoryRateLevels !== null ? respiratoryRateLevels : 'Click a point to see the levels'}</p>
-                                </div>
+                            <div>
+                                <p className="text-[14px] text-left">{respiratoryRateLevels ?? 'Click a point to see the levels'}</p>
                             </div>
                         </div>
-                        <div className="bg-[#FFE6E9] w-1/3 flex flex-col p-[20px] rounded-[12px]">
-                            <div className=" w-[96px] h-[96px]">
-                                <img className="w-full h-full" src={Temperature} alt="Respiratory Rate" />
+                    </div>
+                    <div className="bg-[#FFE6E9] w-1/3 flex flex-col gap-[16px] p-[20px] rounded-[12px]">
+                        <div className=" w-[96px] h-[96px]">
+                            <img className="w-full h-full" src={Temperature} alt="Respiratory Rate" />
+                        </div>
+                        <div className="flex flex-col gap-[17px]">
+                            <div>
+                                <h3 className="text-left font-medium text-[16px]">Temperature</h3>
+                                <p className="font-bold text-left text-[30px]">{temperatureValue ?? 'Click a point to see the temperature'}°F</p>
                             </div>
-                            <div className="flex flex-col gap-[17px]">
-                                <div>
-                                    <h3 className="text-left font-medium text-[16px] text-[#072635]">Temperature</h3>
-                                    <p className="font-extrabold text-[#072635] text-left text-[30px]">{temperatureValue !== null ? temperatureValue : 'Click a point to see the respiratory rate'}°F</p>
-                                </div>
-                                <div>
-                                    <p>{temperatureLevels !== null ? temperatureLevels : 'Click a point to see the levels'}</p>
-                                </div>
+                            <div>
+                                <p className="text-[14px] text-left">{temperatureLevels ?? 'Click a point to see the levels'}</p>
                             </div>
                         </div>
-                        <div className="bg-[#FFE6F1] w-1/3 flex flex-col p-[20px] rounded-[12px]">
-                            <div className=" w-[96px] h-[96px]">
-                                <img className="w-full h-full" src={HeartBPM} alt="Respiratory Rate" />
+                    </div>
+                    <div className="bg-[#FFE6F1] w-1/3 flex flex-col gap-[16px] p-[20px] rounded-[12px]">
+                        <div className=" w-[96px] h-[96px]">
+                            <img className="w-full h-full" src={HeartBPM} alt="Heart Rate" />
+                        </div>
+                        <div className="flex flex-col gap-[17px]">
+                            <div>
+                                <h3 className="text-left font-medium text-[16px]">Heart Rate</h3>
+                                <p className="font-bold text-left text-[30px]">{heartRateValue ?? 'Click a point to see the heart rate'} bpm</p>
                             </div>
-                            <div className="flex flex-col gap-[17px]">
-                                <div>
-                                    <h3 className="text-left font-medium text-[16px] text-[#072635]">Heart Rate</h3>
-                                    <p className="font-extrabold text-[#072635] text-left text-[30px]">{heartRateValue !== null ? heartRateValue : 'Click a point to see the respiratory rate'} bpm</p>
-                                </div>
-                                <div>
-                                    <p>{heartRateLevels !== null ? heartRateLevels : 'Click a point to see the levels'}</p>
-                                </div>
+                            <div>
+                                <p className="text-[14px] text-left">{heartRateLevels ?? 'Click a point to see the levels'}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
     );
-}
+};
 
 export default DiagnosticHistory;
