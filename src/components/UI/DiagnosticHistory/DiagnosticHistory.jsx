@@ -43,7 +43,7 @@ const formatMonth = (month, year) => {
     return format(date, 'MMM, yyyy');
 };
 
-const DiagnosticHistory = () => {
+const DiagnosticHistory = ({ selectedPatient }) => {
     const dispatch = useDispatch();
     const {
         fetchedData,

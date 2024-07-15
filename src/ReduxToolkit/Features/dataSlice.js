@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const auth = btoa(`coalition:skills-test`);
@@ -64,6 +64,10 @@ export const fetchDiagnosticList = createAsyncThunk(
   }
 );
 
+export const selectPatient = createAction("data/selectPatient", (payload) => ({
+  payload,
+}));
+
 const dataSlice = createSlice({
   name: "data",
   initialState: {
@@ -128,6 +132,9 @@ const dataSlice = createSlice({
     },
     setHeartRateLevels: (state, action) => {
       state.diagnosticHistory.heartRateLevels = action.payload;
+    },
+    setSelectedPatient: (state, action) => {
+      state.patients.selectedPatient = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -204,6 +211,7 @@ export const {
   setTemperatureLevels,
   setHeartRateValue,
   setHeartRateLevels,
+  setSelectedPatient,
 } = dataSlice.actions;
 
 export default dataSlice.reducer;

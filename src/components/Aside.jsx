@@ -2,20 +2,24 @@ import SearchLogo from "../../public/assets/search.png";
 import MoreHoriz from "../../public/assets/more_horizontal.png";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPatients } from '../ReduxToolkit/Features/dataSlice';
+import { fetchPatients, selectPatient } from '../ReduxToolkit/Features/dataSlice';
+import DiagnosticHistory from './UI/DiagnosticHistory/DiagnosticHistory';
 
 function Aside() {
     const dispatch = useDispatch();
     const { fetchedData, error } = useSelector((state) => state.data.patients);
+    const { selectedPatient } = useSelector((state) => state.data);
 
     useEffect(() => {
         dispatch(fetchPatients());
     }, [dispatch]);
 
     const names = fetchedData ? fetchedData.map(person => person.name) : [];
-    const profilePhotos = fetchedData ? fetchedData.map(person => person.profile_picture) : [];
-    const gender = fetchedData ? fetchedData.map(person => person.gender) : [];
-    const age = fetchedData ? fetchedData.map(person => person.age) : [];
+
+    const handleClick = (index) => {
+        const selectedPatient = fetchedData[index];
+        dispatch(selectPatient(selectedPatient));
+    };
 
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -37,14 +41,15 @@ function Aside() {
                 {names.map((name, index) => (
                     <div
                         key={index}
-                        className={`flex justify-between p-[16px] items-center ${index === 3 ? 'bg-[#D8FCF7]' : ''}`}
+                        onClick={() => handleClick(index)}
+                        className={`flex justify-between p-[16px] cursor-pointer items-center ${index === 3 ? 'bg-[#D8FCF7]' : ''}`}
                     >
                         <div className="flex w-full gap-[12px] items-center">
                             <div className="w-[48px] h-[48px]">
-                                {profilePhotos[index] ? (
+                                {fetchedData[index].profile_picture ? (
                                     <img
                                         className="w-full h-full object-cover"
-                                        src={profilePhotos[index]}
+                                        src={fetchedData[index].profile_picture}
                                         alt="Profile"
                                     />
                                 ) : (
@@ -55,7 +60,7 @@ function Aside() {
                                 <div>
                                     <h2 className="font-bold text-[14px] text-left">{name}</h2>
                                     <h4 className="text-[14px] text-[#707070] text-left">
-                                        {gender[index]}, {age[index]}
+                                        {fetchedData[index].gender}, {fetchedData[index].age}
                                     </h4>
                                 </div>
                                 <button>
@@ -70,6 +75,8 @@ function Aside() {
                     </div>
                 ))}
             </div>
+            {/* Pass selectedPatient to DiagnosticHistory */}
+            {selectedPatient && <DiagnosticHistory selectedPatient={console.log(selectedPatient)} />}
         </aside>
     );
 }
