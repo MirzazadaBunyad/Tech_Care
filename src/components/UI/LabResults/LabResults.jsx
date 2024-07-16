@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLabResults } from '../../../ReduxToolkit/Features/dataSlice';
+import { fetchLabResults } from '../../../ReduxToolkit/ThunkAPI/AsyncThunk';
 import DownloadIcon from "../../../../public/assets/DownloadIcon.png";
 
 function LabResults() {

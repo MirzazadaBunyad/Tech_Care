@@ -1,101 +1,53 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice } from "@reduxjs/toolkit";
+import {
+  fetchDiagnosticHistory,
+  fetchPatients,
+  fetchLabResults,
+  fetchProfile,
+  fetchDiagnosticList,
+} from "../ThunkAPI/AsyncThunk";
 
-const auth = btoa(
-  `${import.meta.env.VITE_APP_USER}:${import.meta.env.VITE_APP_PASS}`
-);
-const headers = {
-  Authorization: `Basic ${auth}`,
+const initialState = {
+  diagnosticHistory: {
+    fetchedData: null,
+    error: null,
+    clickedSystolicValue: null,
+    clickedDiastolicValue: null,
+    systolicLevels: [],
+    diastolicLevels: [],
+    respiratoryRateValue: null,
+    respiratoryRateLevels: [],
+    temperatureValue: null,
+    temperatureLevels: [],
+    heartRateValue: null,
+    heartRateLevels: [],
+  },
+  selectedPatient: null,
+  patients: {
+    fetchedData: null,
+    error: null,
+  },
+  labResults: {
+    fetchedData: null,
+    error: null,
+  },
+  profile: {
+    fetchedData: null,
+    error: null,
+  },
+  diagnostics: {
+    fetchedData: null,
+    error: null,
+  },
 };
-
-// Async Thunks
-export const fetchDiagnosticHistory = createAsyncThunk(
-  "data/fetchDiagnosticHistory",
-  async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}`, {
-        headers,
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching diagnostic history", error);
-      throw error;
-    }
-  }
-);
-
-export const fetchPatients = createAsyncThunk(
-  "data/fetchPatients",
-  async () => {
-    const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}`, {
-      headers,
-    });
-    return response.data;
-  }
-);
-
-export const fetchLabResults = createAsyncThunk(
-  "data/fetchLabResults",
-  async () => {
-    const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}`, {
-      headers,
-    });
-    return response.data[3]?.lab_results;
-  }
-);
-
-export const fetchProfile = createAsyncThunk("data/fetchProfile", async () => {
-  const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}`, {
-    headers,
-  });
-  return response.data[3];
-});
-
-export const fetchDiagnosticList = createAsyncThunk(
-  "data/fetchDiagnosticList",
-  async () => {
-    const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}`, {
-      headers,
-    });
-    return response.data[3].diagnostic_list;
-  }
-);
 
 const dataSlice = createSlice({
   name: "data",
-  initialState: {
-    diagnosticHistory: {
-      fetchedData: null,
-      error: null,
-      clickedSystolicValue: null,
-      clickedDiastolicValue: null,
-      systolicLevels: [],
-      diastolicLevels: [],
-      respiratoryRateValue: null,
-      respiratoryRateLevels: [],
-      temperatureValue: null,
-      temperatureLevels: [],
-      heartRateValue: null,
-      heartRateLevels: [],
-    },
-    patients: {
-      fetchedData: null,
-      error: null,
-    },
-    labResults: {
-      fetchedData: null,
-      error: null,
-    },
-    profile: {
-      fetchedData: null,
-      error: null,
-    },
-    diagnostics: {
-      fetchedData: null,
-      error: null,
-    },
-  },
+  initialState,
   reducers: {
+    setSelectedPatient(state, action) {
+      state.selectedPatient = action.payload;
+    },
     setClickedSystolicValue: (state, action) => {
       state.diagnosticHistory.clickedSystolicValue = action.payload;
     },
@@ -201,6 +153,7 @@ export const {
   setTemperatureLevels,
   setHeartRateValue,
   setHeartRateLevels,
+  setSelectedPatient,
 } = dataSlice.actions;
 
 export default dataSlice.reducer;

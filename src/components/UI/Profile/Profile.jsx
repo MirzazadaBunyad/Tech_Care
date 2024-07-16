@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProfile } from '../../../ReduxToolkit/Features/dataSlice';
+import { fetchProfile } from '../../../ReduxToolkit/ThunkAPI/AsyncThunk';
 import BirthIcon from "../../../../public/assets/BirthIcon.png";
 import FemaleIcon from "../../../../public/assets/FemaleIcon.png";
 import PhoneIcon from "../../../../public/assets/PhoneIcon.png";

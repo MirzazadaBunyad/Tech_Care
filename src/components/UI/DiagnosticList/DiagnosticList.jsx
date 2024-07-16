@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDiagnosticList } from '../../../ReduxToolkit/Features/dataSlice';
+import { fetchDiagnosticList } from '../../../ReduxToolkit/ThunkAPI/AsyncThunk';
 
 function DiagnosticList() {
     const dispatch = useDispatch();

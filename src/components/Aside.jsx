@@ -1,13 +1,14 @@
 import SearchLogo from "../../public/assets/search.png";
 import MoreHoriz from "../../public/assets/more_horizontal.png";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPatients } from '../ReduxToolkit/Features/dataSlice';
+import { fetchPatients } from '../ReduxToolkit/ThunkAPI/AsyncThunk';
+import { setSelectedPatient } from '../ReduxToolkit/Features/dataSlice';
 
 function Aside() {
     const dispatch = useDispatch();
     const { fetchedData, error } = useSelector((state) => state.data.patients);
-    console.log(fetchedData);
+    const [selectedIdx, setSelectedIdx] = useState(null);
 
     useEffect(() => {
         dispatch(fetchPatients());
@@ -26,6 +27,16 @@ function Aside() {
         return <div>Loading...</div>;
     }
 
+    const handlePatientClick = (index) => {
+        if (selectedIdx === index) {
+            setSelectedIdx(null);
+        } else {
+            setSelectedIdx(index);
+        }
+        const selectedPatient = fetchedData[index];
+        dispatch(setSelectedPatient(selectedPatient));
+    };
+
     return (
         <aside className="bg-white mt-[32px] w-[20%] rounded-[16px] h-[1010px] overflow-hidden">
             <div className="flex justify-between px-[20px] pt-[20px] items-center">
@@ -38,7 +49,9 @@ function Aside() {
                 {names.map((name, index) => (
                     <div
                         key={index}
-                        className={`flex justify-between p-[16px] items-center ${index === 3 ? 'bg-[#D8FCF7]' : ''}`}
+                        className={`patient-item flex justify-between p-[16px] cursor-pointer items-center ${selectedIdx === index ? 'selected' : ''
+                            }`}
+                        onClick={() => handlePatientClick(index)}
                     >
                         <div className="flex w-full gap-[12px] items-center">
                             <div className="w-[48px] h-[48px]">
