@@ -7,6 +7,7 @@ import { fetchPatients } from '../ReduxToolkit/Features/dataSlice';
 function Aside() {
     const dispatch = useDispatch();
     const { fetchedData, error } = useSelector((state) => state.data.patients);
+    console.log(fetchedData);
 
     useEffect(() => {
         dispatch(fetchPatients());
