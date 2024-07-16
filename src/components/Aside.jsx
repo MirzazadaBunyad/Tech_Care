@@ -75,7 +75,6 @@ function Aside() {
                     </div>
                 ))}
             </div>
-            {/* Pass selectedPatient to DiagnosticHistory */}
             {selectedPatient && <DiagnosticHistory selectedPatient={console.log(selectedPatient)} />}
         </aside>
     );
