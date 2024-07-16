@@ -60,7 +60,6 @@ const DiagnosticHistory = () => {
     } = useSelector((state) => state.data.diagnosticHistory);
 
     const selectedPatient = useSelector((state) => state.data.selectedPatient);
-    console.log(selectedPatient);
 
     useEffect(() => {
         if (selectedPatient) {
