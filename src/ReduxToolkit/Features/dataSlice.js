@@ -2,9 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   fetchDiagnosticHistory,
   fetchPatients,
-  fetchLabResults,
-  fetchProfile,
-  fetchDiagnosticList,
 } from "../ThunkAPI/AsyncThunk";
 
 const initialState = {
@@ -102,42 +99,6 @@ const dataSlice = createSlice({
       })
       .addCase(fetchPatients.rejected, (state, action) => {
         state.patients.error = action.error;
-      });
-
-    // Lab Results
-    builder
-      .addCase(fetchLabResults.pending, (state) => {
-        state.labResults.error = null;
-      })
-      .addCase(fetchLabResults.fulfilled, (state, action) => {
-        state.labResults.fetchedData = action.payload;
-      })
-      .addCase(fetchLabResults.rejected, (state, action) => {
-        state.labResults.error = action.error;
-      });
-
-    // Profile
-    builder
-      .addCase(fetchProfile.pending, (state) => {
-        state.profile.error = null;
-      })
-      .addCase(fetchProfile.fulfilled, (state, action) => {
-        state.profile.fetchedData = action.payload;
-      })
-      .addCase(fetchProfile.rejected, (state, action) => {
-        state.profile.error = action.error;
-      });
-
-    // Diagnostics
-    builder
-      .addCase(fetchDiagnosticList.pending, (state) => {
-        state.diagnostics.error = null;
-      })
-      .addCase(fetchDiagnosticList.fulfilled, (state, action) => {
-        state.diagnostics.fetchedData = action.payload;
-      })
-      .addCase(fetchDiagnosticList.rejected, (state, action) => {
-        state.diagnostics.error = action.error;
       });
   },
 });

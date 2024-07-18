@@ -33,7 +33,7 @@ function Aside() {
         } else {
             setSelectedIdx(index);
         }
-        const selectedPatient = fetchedData[index];
+        const selectedPatient = { ...fetchedData[index], index };
         dispatch(setSelectedPatient(selectedPatient));
     };
 

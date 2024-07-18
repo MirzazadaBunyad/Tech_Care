@@ -32,30 +32,3 @@ export const fetchPatients = createAsyncThunk(
     return response.data;
   }
 );
-
-export const fetchLabResults = createAsyncThunk(
-  "data/fetchLabResults",
-  async () => {
-    const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}`, {
-      headers,
-    });
-    return response.data[3]?.lab_results;
-  }
-);
-
-export const fetchProfile = createAsyncThunk("data/fetchProfile", async () => {
-  const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}`, {
-    headers,
-  });
-  return response.data[3];
-});
-
-export const fetchDiagnosticList = createAsyncThunk(
-  "data/fetchDiagnosticList",
-  async () => {
-    const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}`, {
-      headers,
-    });
-    return response.data[3].diagnostic_list;
-  }
-);
