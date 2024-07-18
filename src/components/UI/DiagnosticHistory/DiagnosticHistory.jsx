@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Line } from 'react-chartjs-2';
 import { parse, format } from 'date-fns';
+import { fetchDiagnosticHistory } from '../../../ReduxToolkit/ThunkAPI/AsyncThunk';
 import {
-    fetchDiagnosticHistory,
     setClickedSystolicValue,
     setClickedDiastolicValue,
     setSystolicLevels,
@@ -46,7 +46,6 @@ const formatMonth = (month, year) => {
 const DiagnosticHistory = ({ selectedPatient }) => {
     const dispatch = useDispatch();
     const {
-        fetchedData,
         error,
         clickedSystolicValue,
         clickedDiastolicValue,
@@ -60,14 +59,18 @@ const DiagnosticHistory = ({ selectedPatient }) => {
         heartRateLevels,
     } = useSelector((state) => state.data.diagnosticHistory);
 
-    useEffect(() => {
-        dispatch(fetchDiagnosticHistory());
-    }, [dispatch]);
+    const selectedPatient = useSelector((state) => state.data.selectedPatient);
 
     useEffect(() => {
-        if (!fetchedData) return;
+        if (selectedPatient) {
+            dispatch(fetchDiagnosticHistory(selectedPatient.id));
+        }
+    }, [dispatch, selectedPatient]);
 
-        const diagnosisHistory = fetchedData[3].diagnosis_history.slice(0, 6).reverse();
+    useEffect(() => {
+        if (!selectedPatient || !selectedPatient.diagnosis_history) return;
+
+        const diagnosisHistory = selectedPatient.diagnosis_history.slice(0, 6).reverse();
 
         const initialValues = {
             systolic: diagnosisHistory[0].blood_pressure.systolic.value,
@@ -81,7 +84,6 @@ const DiagnosticHistory = ({ selectedPatient }) => {
             heartRate: diagnosisHistory[0].heart_rate.value,
             heartRateLevels: diagnosisHistory[0].heart_rate.levels,
         };
-
         dispatch(setClickedSystolicValue(initialValues.systolic));
         dispatch(setSystolicLevels(initialValues.systolicLevels));
         dispatch(setClickedDiastolicValue(initialValues.diastolic));
@@ -92,13 +94,12 @@ const DiagnosticHistory = ({ selectedPatient }) => {
         dispatch(setTemperatureLevels(initialValues.temperatureLevels));
         dispatch(setHeartRateValue(initialValues.heartRate));
         dispatch(setHeartRateLevels(initialValues.heartRateLevels));
-    }, [fetchedData, dispatch]);
+    }, [selectedPatient, dispatch]);
 
     if (error) return <div>Error: {error.message}</div>;
-    if (!fetchedData) return <div>Loading...</div>;
+    if (!selectedPatient || !selectedPatient.diagnosis_history) return <div>Loading...</div>;
 
-    const diagnosisHistory = fetchedData[3].diagnosis_history.slice(0, 6).reverse();
-
+    const diagnosisHistory = selectedPatient.diagnosis_history.slice(0, 6).reverse();
     const labels = diagnosisHistory.map(record => formatMonth(record.month, record.year));
     const systolicValues = diagnosisHistory.map(record => record.blood_pressure.systolic.value);
     const diastolicValues = diagnosisHistory.map(record => record.blood_pressure.diastolic.value);

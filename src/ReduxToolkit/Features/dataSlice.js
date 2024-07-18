@@ -1,108 +1,50 @@
-import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice } from "@reduxjs/toolkit";
+import {
+  fetchDiagnosticHistory,
+  fetchPatients,
+} from "../ThunkAPI/AsyncThunk";
 
-const auth = btoa(`coalition:skills-test`);
-const headers = {
-  Authorization: `Basic ${auth}`,
+const initialState = {
+  diagnosticHistory: {
+    fetchedData: null,
+    error: null,
+    clickedSystolicValue: null,
+    clickedDiastolicValue: null,
+    systolicLevels: [],
+    diastolicLevels: [],
+    respiratoryRateValue: null,
+    respiratoryRateLevels: [],
+    temperatureValue: null,
+    temperatureLevels: [],
+    heartRateValue: null,
+    heartRateLevels: [],
+  },
+  selectedPatient: null,
+  patients: {
+    fetchedData: null,
+    error: null,
+  },
+  labResults: {
+    fetchedData: null,
+    error: null,
+  },
+  profile: {
+    fetchedData: null,
+    error: null,
+  },
+  diagnostics: {
+    fetchedData: null,
+    error: null,
+  },
 };
-
-// Async Thunks
-export const fetchDiagnosticHistory = createAsyncThunk(
-  "data/fetchDiagnosticHistory",
-  async () => {
-    try {
-      const response = await axios.get(
-        "https://fedskillstest.coalitiontechnologies.workers.dev",
-        { headers }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching diagnostic history", error);
-      throw error;
-    }
-  }
-);
-
-export const fetchPatients = createAsyncThunk(
-  "data/fetchPatients",
-  async () => {
-    const response = await axios.get(
-      "https://fedskillstest.coalitiontechnologies.workers.dev",
-      { headers }
-    );
-    return response.data;
-  }
-);
-
-export const fetchLabResults = createAsyncThunk(
-  "data/fetchLabResults",
-  async () => {
-    const response = await axios.get(
-      "https://fedskillstest.coalitiontechnologies.workers.dev",
-      { headers }
-    );
-    return response.data[3]?.lab_results;
-  }
-);
-
-export const fetchProfile = createAsyncThunk("data/fetchProfile", async () => {
-  const response = await axios.get(
-    "https://fedskillstest.coalitiontechnologies.workers.dev",
-    { headers }
-  );
-  return response.data[3];
-});
-
-export const fetchDiagnosticList = createAsyncThunk(
-  "data/fetchDiagnosticList",
-  async () => {
-    const response = await axios.get(
-      "https://fedskillstest.coalitiontechnologies.workers.dev",
-      { headers }
-    );
-    return response.data[3].diagnostic_list;
-  }
-);
-
-export const selectPatient = createAction("data/selectPatient", (payload) => ({
-  payload,
-}));
 
 const dataSlice = createSlice({
   name: "data",
-  initialState: {
-    diagnosticHistory: {
-      fetchedData: null,
-      error: null,
-      clickedSystolicValue: null,
-      clickedDiastolicValue: null,
-      systolicLevels: [],
-      diastolicLevels: [],
-      respiratoryRateValue: null,
-      respiratoryRateLevels: [],
-      temperatureValue: null,
-      temperatureLevels: [],
-      heartRateValue: null,
-      heartRateLevels: [],
-    },
-    patients: {
-      fetchedData: null,
-      error: null,
-    },
-    labResults: {
-      fetchedData: null,
-      error: null,
-    },
-    profile: {
-      fetchedData: null,
-      error: null,
-    },
-    diagnostics: {
-      fetchedData: null,
-      error: null,
-    },
-  },
+  initialState,
   reducers: {
+    setSelectedPatient(state, action) {
+      state.selectedPatient = action.payload;
+    },
     setClickedSystolicValue: (state, action) => {
       state.diagnosticHistory.clickedSystolicValue = action.payload;
     },
@@ -133,9 +75,6 @@ const dataSlice = createSlice({
     setHeartRateLevels: (state, action) => {
       state.diagnosticHistory.heartRateLevels = action.payload;
     },
-    setSelectedPatient: (state, action) => {
-      state.patients.selectedPatient = action.payload;
-    },
   },
   extraReducers: (builder) => {
     // Diagnostic History
@@ -160,42 +99,6 @@ const dataSlice = createSlice({
       })
       .addCase(fetchPatients.rejected, (state, action) => {
         state.patients.error = action.error;
-      });
-
-    // Lab Results
-    builder
-      .addCase(fetchLabResults.pending, (state) => {
-        state.labResults.error = null;
-      })
-      .addCase(fetchLabResults.fulfilled, (state, action) => {
-        state.labResults.fetchedData = action.payload;
-      })
-      .addCase(fetchLabResults.rejected, (state, action) => {
-        state.labResults.error = action.error;
-      });
-
-    // Profile
-    builder
-      .addCase(fetchProfile.pending, (state) => {
-        state.profile.error = null;
-      })
-      .addCase(fetchProfile.fulfilled, (state, action) => {
-        state.profile.fetchedData = action.payload;
-      })
-      .addCase(fetchProfile.rejected, (state, action) => {
-        state.profile.error = action.error;
-      });
-
-    // Diagnostics
-    builder
-      .addCase(fetchDiagnosticList.pending, (state) => {
-        state.diagnostics.error = null;
-      })
-      .addCase(fetchDiagnosticList.fulfilled, (state, action) => {
-        state.diagnostics.fetchedData = action.payload;
-      })
-      .addCase(fetchDiagnosticList.rejected, (state, action) => {
-        state.diagnostics.error = action.error;
       });
   },
 });

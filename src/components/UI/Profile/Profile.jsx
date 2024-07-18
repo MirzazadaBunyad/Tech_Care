@@ -1,32 +1,21 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProfile } from '../../../ReduxToolkit/Features/dataSlice';
+import { useSelector } from "react-redux";
 import BirthIcon from "../../../../public/assets/BirthIcon.png";
 import FemaleIcon from "../../../../public/assets/FemaleIcon.png";
 import PhoneIcon from "../../../../public/assets/PhoneIcon.png";
 import InsuranceIcon from "../../../../public/assets/InsuranceIcon.png";
 
 function Profile() {
-    const dispatch = useDispatch();
-    const { fetchedData, error } = useSelector((state) => state.data.profile);
+    const selectedPatient = useSelector((state) => state.data.selectedPatient);
 
-    useEffect(() => {
-        dispatch(fetchProfile());
-    }, [dispatch]);
-
-    if (error) {
-        return <div>Error: {error.message}</div>;
-    }
-
-    if (!fetchedData) {
-        return <div>Loading...</div>;
+    if (!selectedPatient) {
+        return <div>Select a patient to view profile</div>;
     }
 
     return (
         <div className="flex flex-col gap-[32px] mt-[18px] bg-[#FFFFFF] rounded-[16px]">
             <div className="flex gap-[10px] mt-[32px] flex-col items-center justify-center">
-                <img src={fetchedData.profile_picture} className="w-[200px] h-[200px]" alt="" />
-                <h2 className="font-bold text-[24px] text-center">{fetchedData.name}</h2>
+                <img src={selectedPatient.profile_picture} className="w-[200px] h-[200px]" alt="" />
+                <h2 className="font-bold text-[24px] text-center">{selectedPatient.name}</h2>
             </div>
             <div className="ml-[20px] flex flex-col gap-[24px]">
                 <div className="flex gap-[16px] justify-start items-center">
@@ -35,7 +24,7 @@ function Profile() {
                     </div>
                     <div className="flex flex-col gap-[4px]">
                         <h5 className="text-[14px] font-medium text-left">Date Of Birth</h5>
-                        <p className="font-bold text-[14px] text-left">{fetchedData.date_of_birth}</p>
+                        <p className="font-bold text-[14px] text-left">{selectedPatient.date_of_birth}</p>
                     </div>
                 </div>
                 <div className="flex gap-[16px] justify-start items-center">
@@ -44,7 +33,7 @@ function Profile() {
                     </div>
                     <div className="flex flex-col gap-[4px]">
                         <h5 className="text-[14px] font-medium text-left">Gender</h5>
-                        <p className="font-bold text-[14px] text-left">{fetchedData.gender}</p>
+                        <p className="font-bold text-[14px] text-left">{selectedPatient.gender}</p>
                     </div>
                 </div>
                 <div className="flex gap-[16px] justify-start items-center">
@@ -53,7 +42,7 @@ function Profile() {
                     </div>
                     <div className="flex flex-col gap-[4px]">
                         <h5 className="text-[14px] font-medium text-left">Contact Info.</h5>
-                        <p className="font-bold text-[14px] text-left">{fetchedData.phone_number}</p>
+                        <p className="font-bold text-[14px] text-left">{selectedPatient.phone_number}</p>
                     </div>
                 </div>
                 <div className="flex gap-[16px] justify-start items-center">
@@ -62,7 +51,7 @@ function Profile() {
                     </div>
                     <div className="flex flex-col gap-[4px]">
                         <h5 className="text-[14px] font-medium text-left">Emergency Contacts</h5>
-                        <p className="font-bold text-[14px] text-left">{fetchedData.emergency_contact}</p>
+                        <p className="font-bold text-[14px] text-left">{selectedPatient.emergency_contact}</p>
                     </div>
                 </div>
                 <div className="flex gap-[16px] justify-start items-center">
@@ -71,7 +60,7 @@ function Profile() {
                     </div>
                     <div className="flex flex-col gap-[4px]">
                         <h5 className="text-[14px] font-medium text-left">Insurance Provider</h5>
-                        <p className="font-bold text-[14px] text-left">{fetchedData.insurance_type}</p>
+                        <p className="font-bold text-[14px] text-left">{selectedPatient.insurance_type}</p>
                     </div>
                 </div>
             </div>

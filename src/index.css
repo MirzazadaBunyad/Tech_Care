@@ -24,3 +24,11 @@
     border-radius: 13px;
     border: 2px solid #f1f1f1;
 }
+
+.patient-item {
+    transition: background-color 0.3s ease;
+}
+
+.patient-item.selected {
+    background-color: #D8FCF7;
+}

@@ -1,22 +1,8 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchDiagnosticList } from '../../../ReduxToolkit/Features/dataSlice';
+import { useSelector } from "react-redux";
 
 function DiagnosticList() {
-    const dispatch = useDispatch();
-    const { fetchedData, error } = useSelector((state) => state.data.diagnostics);
-
-    useEffect(() => {
-        dispatch(fetchDiagnosticList());
-    }, [dispatch]);
-
-    if (error) {
-        return <div>Error: {error.message}</div>;
-    }
-
-    if (!fetchedData) {
-        return <div>Loading...</div>;
-    }
+    const selectedPatient = useSelector((state) => state.data.selectedPatient);
+    const diagnosticList = selectedPatient?.diagnostic_list || [];
 
     return (
         <div className="flex flex-col gap-[32px] bg-white rounded-[16px]">
@@ -28,7 +14,7 @@ function DiagnosticList() {
                     <span className="w-[18%] font-bold text-[14px] text-left">Status</span>
                 </div>
                 <div className="max-h-[150px] overflow-y-auto custom-scrollbar">
-                    {fetchedData.map((diagnosis, index) => (
+                    {diagnosticList.map((diagnosis, index) => (
                         <div key={index} className="flex justify-between items-center pr-[23px] pl-[15px]">
                             <span className="w-[30%] py-[10px] text-[14px] text-left">{diagnosis.name}</span>
                             <span className="w-[50%] py-[10px] text-[14px] text-left">{diagnosis.description}</span>
