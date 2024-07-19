@@ -54,8 +54,8 @@ function Header() {
                         <img className="w-[44px] h-[44px]" src={Profile} alt="" />
                     </div>
                     <div className="pr-[12px]">
-                        <h3 className="font-bold text-[14px] text-left">Dr. Jose Simmons</h3>
-                        <h5 className="text-[14px] text-[#707070]">General Practitioner</h5>
+                        <h3 className="font-bold text-[14px] text-left cursor-default">Dr. Jose Simmons</h3>
+                        <h5 className="text-[14px] text-[#707070] cursor-default">General Practitioner</h5>
                     </div>
                 </div>
                 <div className="flex items-center gap-[12px] pl-[12px]">

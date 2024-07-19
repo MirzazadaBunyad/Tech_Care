@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Line } from 'react-chartjs-2';
-import { parse, format } from 'date-fns';
 import { fetchDiagnosticHistory } from '../../../ReduxToolkit/ThunkAPI/AsyncThunk';
 import {
     setClickedSystolicValue,
@@ -15,33 +13,14 @@ import {
     setHeartRateValue,
     setHeartRateLevels,
 } from '../../../ReduxToolkit/Features/dataSlice';
+import RespiratoryRateIcon from '../../../../public/assets/RespiratoryRate.svg';
+import TemperatureIcon from '../../../../public/assets/temperature.svg';
+import HeartBPMIcon from '../../../../public/assets/HeartBPM.svg';
 import ArrowUp from '../../../../public/assets/ArrowUp.svg';
 import ArrowDown from '../../../../public/assets/ArrowDown.svg';
-import RespiratoryRate from '../../../../public/assets/RespiratoryRate.svg';
-import Temperature from '../../../../public/assets/temperature.svg';
-import HeartBPM from '../../../../public/assets/HeartBPM.svg';
-
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Tooltip,
-} from 'chart.js';
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Tooltip,
-);
-
-const formatMonth = (month, year) => {
-    const date = parse(`${month} ${year}`, 'MMMM yyyy', new Date());
-    return format(date, 'MMM, yyyy');
-};
+import BloodPressureChart from '../BloodPressureChart/BloodPressureChart';
+import MetricInfo from '../MetricInfo/MetricInfo';
+import MetricCard from '../MetricCard/MetricCard';
 
 const DiagnosticHistory = () => {
     const dispatch = useDispatch();
@@ -100,33 +79,6 @@ const DiagnosticHistory = () => {
     if (!selectedPatient || !selectedPatient.diagnosis_history) return <div>Loading...</div>;
 
     const diagnosisHistory = selectedPatient.diagnosis_history.slice(0, 6).reverse();
-    const labels = diagnosisHistory.map(record => formatMonth(record.month, record.year));
-    const systolicValues = diagnosisHistory.map(record => record.blood_pressure.systolic.value);
-    const diastolicValues = diagnosisHistory.map(record => record.blood_pressure.diastolic.value);
-
-    const data = {
-        labels,
-        datasets: [
-            {
-                label: 'Systolic',
-                data: systolicValues,
-                backgroundColor: 'transparent',
-                borderColor: '#E66FD2',
-                pointBackgroundColor: '#C26EB4',
-                pointBorderWidth: 6,
-                tension: 0.5,
-            },
-            {
-                label: 'Diastolic',
-                data: diastolicValues,
-                backgroundColor: 'transparent',
-                borderColor: '#8C6FE6',
-                pointBackgroundColor: '#6EB4C2',
-                pointBorderWidth: 6,
-                tension: 0.5,
-            },
-        ],
-    };
 
     const options = {
         responsive: true,
@@ -206,90 +158,57 @@ const DiagnosticHistory = () => {
 
     return (
         <div className="mt-[32px] flex flex-col bg-white rounded-[16px]">
-            <h1 className="font-bold text-[24px] m-[20px] text-left">Diagnosis History</h1>
+            <h1 className="font-bold text-[24px] m-[20px] text-left cursor-default">Diagnosis History</h1>
             <div className="flex flex-col gap-[20px]">
                 <div className="bg-[#F4F0FE] flex gap-[32px] mx-[20px] rounded-[12px]">
                     <div className="w-[70%] mb-[16px] h-[300px] flex flex-col">
                         <div className="flex justify-between items-center">
-                            <h2 className="font-bold p-[16px] text-[18px] text-left">Blood Pressure</h2>
+                            <h2 className="font-bold p-[16px] text-[18px] text-left cursor-default">Blood Pressure</h2>
                             <select className="p-[16px] border-none bg-transparent outline-none">
                                 <option value="" className="text-[14px] text-right">Last 6 months</option>
                             </select>
                         </div>
-                        <Line className="px-[16px]" data={data} options={options} />
+                        <BloodPressureChart diagnosisHistory={diagnosisHistory} options={options} />
                     </div>
                     <div className="w-[30%] flex flex-col gap-[16px] py-[16px] mx-[16px]">
-                        <div className="flex flex-col gap-[8px] border-b-[1px] border-b-[#CBC8D4] border-b-w-[200px]">
-                            <div className="flex gap-[4px] items-center">
-                                <div className="bg-[#E66FD2] border-[1px] border-white w-[14px] h-[14px] rounded-[50%]"></div>
-                                <h3 className="text-left text-[14px] font-bold">Systolic</h3>
-                            </div>
-                            <div>
-                                <p className="font-bold text-[22px] text-left">{clickedSystolicValue ?? 'Click a systolic point to see the value'}</p>
-                                <p className="text-[14px] flex gap-[8px] pb-[16px]">
-                                    <img src={ArrowUp} alt="" />
-                                    {systolicLevels ?? 'Click a systolic point to see the levels'}
-                                </p>
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-[8px]">
-                            <div className="flex gap-[4px] items-center">
-                                <div className="bg-[#8C6FE6] border-[1px] border-white w-[14px] h-[14px] rounded-[50%]"></div>
-                                <h3 className="text-left text-[14px] font-bold">Diastolic</h3>
-                            </div>
-                            <div>
-                                <p className="font-bold text-[22px]">{clickedDiastolicValue ?? 'Click a diastolic point to see the value'}</p>
-                                <p className="text-[14px] flex gap-[8px]">
-                                    <img src={ArrowDown} alt="" />
-                                    {diastolicLevels ?? 'Click a diastolic point to see the levels'}
-                                </p>
-                            </div>
-                        </div>
+                        <MetricInfo
+                            color="#E66FD2"
+                            label="Systolic"
+                            value={clickedSystolicValue ?? 'Click a systolic point to see the value'}
+                            levels={systolicLevels ?? 'Click a systolic point to see the levels'}
+                            arrow={ArrowUp}
+                        />
+                        <MetricInfo
+                            color="#8C6FE6"
+                            label="Diastolic"
+                            value={clickedDiastolicValue ?? 'Click a diastolic point to see the value'}
+                            levels={diastolicLevels ?? 'Click a diastolic point to see the levels'}
+                            arrow={ArrowDown}
+                        />
                     </div>
                 </div>
                 <div className="flex gap-[21px] w-full px-[20px] pb-[20px]">
-                    <div className="bg-[#E0F3FA] w-1/3 flex flex-col p-[20px] gap-[16px] rounded-[12px]">
-                        <div className=" w-[96px] h-[96px]">
-                            <img className="w-full h-full" src={RespiratoryRate} alt="Respiratory Rate" />
-                        </div>
-                        <div className="flex flex-col gap-[16px]">
-                            <div>
-                                <h3 className="text-left font-medium text-[16px]">Respiratory Rate</h3>
-                                <p className="font-bold text-left text-[30px]">{respiratoryRateValue ?? 'Click a point to see the respiratory rate'} bpm</p>
-                            </div>
-                            <div>
-                                <p className="text-[14px] text-left">{respiratoryRateLevels ?? 'Click a point to see the levels'}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="bg-[#FFE6E9] w-1/3 flex flex-col gap-[16px] p-[20px] rounded-[12px]">
-                        <div className=" w-[96px] h-[96px]">
-                            <img className="w-full h-full" src={Temperature} alt="Respiratory Rate" />
-                        </div>
-                        <div className="flex flex-col gap-[17px]">
-                            <div>
-                                <h3 className="text-left font-medium text-[16px]">Temperature</h3>
-                                <p className="font-bold text-left text-[30px]">{temperatureValue ?? 'Click a point to see the temperature'}°F</p>
-                            </div>
-                            <div>
-                                <p className="text-[14px] text-left">{temperatureLevels ?? 'Click a point to see the levels'}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="bg-[#FFE6F1] w-1/3 flex flex-col gap-[16px] p-[20px] rounded-[12px]">
-                        <div className=" w-[96px] h-[96px]">
-                            <img className="w-full h-full" src={HeartBPM} alt="Heart Rate" />
-                        </div>
-                        <div className="flex flex-col gap-[17px]">
-                            <div>
-                                <h3 className="text-left font-medium text-[16px]">Heart Rate</h3>
-                                <p className="font-bold text-left text-[30px]">{heartRateValue ?? 'Click a point to see the heart rate'} bpm</p>
-                            </div>
-                            <div>
-                                <p className="text-[14px] text-left">{heartRateLevels ?? 'Click a point to see the levels'}</p>
-                            </div>
-                        </div>
-                    </div>
+                    <MetricCard
+                        className="bg-[#E0F3FA]"
+                        icon={RespiratoryRateIcon}
+                        title="Respiratory Rate"
+                        value={respiratoryRateValue ?? 'Click a point to see the respiratory rate'}
+                        levels={respiratoryRateLevels ?? 'Click a point to see the levels'}
+                    />
+                    <MetricCard
+                        className="bg-[#FFE6E9]"
+                        icon={TemperatureIcon}
+                        title="Temperature"
+                        value={temperatureValue ?? 'Click a point to see the temperature'}
+                        levels={temperatureLevels ?? 'Click a point to see the levels'}
+                    />
+                    <MetricCard
+                        className="bg-[#FFE6F1]"
+                        icon={HeartBPMIcon}
+                        title="Heart Rate"
+                        value={heartRateValue ?? 'Click a point to see the heart rate'}
+                        levels={heartRateLevels ?? 'Click a point to see the levels'}
+                    />
                 </div>
             </div>
         </div>

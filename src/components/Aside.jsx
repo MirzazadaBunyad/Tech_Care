@@ -42,14 +42,14 @@ function Aside() {
     }
 
     return (
-        <aside className="bg-white mt-[32px] w-[20%] rounded-[16px] h-[1010px] overflow-hidden">
+        <aside className="bg-white mt-[32px] w-[20%] rounded-[16px] h-[100%] overflow-hidden">
             <div className="flex justify-between px-[20px] pt-[20px] items-center">
-                <h2 className="font-bold text-[24px] text-left">Patients</h2>
+                <h2 className="font-bold text-[24px] text-left cursor-default">Patients</h2>
                 <button className="w-[18px] h-[18px]">
                     <img className="w-full h-full" src={SearchLogo} alt="Search" />
                 </button>
             </div>
-            <div className="flex flex-col gap-[16px] mt-[20px] max-h-full overflow-y-auto custom-scrollbar">
+            <div className="flex flex-col gap-[16px] mt-[20px] h-[980px] overflow-y-auto custom-scrollbar">
                 {fetchedData.map((person, index) => (
                     <PatientItem
                         key={index}
