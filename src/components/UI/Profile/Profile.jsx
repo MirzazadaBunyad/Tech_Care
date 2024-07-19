@@ -13,11 +13,11 @@ function Profile() {
 
     return (
         <div className="flex flex-col gap-[32px] mt-[18px] bg-[#FFFFFF] rounded-[16px]">
-            <div className="flex gap-[10px] mt-[32px] flex-col items-center justify-center">
+            <div className="flex gap-[10px] mt-[32px] flex-col items-center justify-center cursor-default">
                 <img src={selectedPatient.profile_picture} className="w-[200px] h-[200px]" alt="" />
                 <h2 className="font-bold text-[24px] text-center">{selectedPatient.name}</h2>
             </div>
-            <div className="ml-[20px] flex flex-col gap-[24px]">
+            <div className="ml-[20px] flex flex-col gap-[24px] cursor-default">
                 <div className="flex gap-[16px] justify-start items-center">
                     <div>
                         <img src={BirthIcon} alt="" />
