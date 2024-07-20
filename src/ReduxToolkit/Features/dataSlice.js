@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   fetchDiagnosticHistory,
-  fetchPatients,
 } from "../ThunkAPI/AsyncThunk";
 
 const initialState = {
@@ -77,7 +76,6 @@ const dataSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Diagnostic History
     builder
       .addCase(fetchDiagnosticHistory.pending, (state) => {
         state.diagnosticHistory.error = null;
@@ -87,18 +85,6 @@ const dataSlice = createSlice({
       })
       .addCase(fetchDiagnosticHistory.rejected, (state, action) => {
         state.diagnosticHistory.error = action.error;
-      });
-
-    // Patients
-    builder
-      .addCase(fetchPatients.pending, (state) => {
-        state.patients.error = null;
-      })
-      .addCase(fetchPatients.fulfilled, (state, action) => {
-        state.patients.fetchedData = action.payload;
-      })
-      .addCase(fetchPatients.rejected, (state, action) => {
-        state.patients.error = action.error;
       });
   },
 });

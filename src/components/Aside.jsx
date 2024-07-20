@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPatients } from '../ReduxToolkit/ThunkAPI/AsyncThunk';
+import { fetchDiagnosticHistory } from '../ReduxToolkit/ThunkAPI/AsyncThunk';
 import { setSelectedPatient } from '../ReduxToolkit/Features/dataSlice';
 import SearchLogo from "../../public/assets/search.png";
 import PatientItem from './UI/PatientItem/PatientItem';
 
 const usePatients = () => {
     const dispatch = useDispatch();
-    const { fetchedData, error } = useSelector((state) => state.data.patients);
+    const { fetchedData, error } = useSelector((state) => state.data.diagnosticHistory);
 
     useEffect(() => {
-        dispatch(fetchPatients());
+        dispatch(fetchDiagnosticHistory());
     }, [dispatch]);
 
     useEffect(() => {

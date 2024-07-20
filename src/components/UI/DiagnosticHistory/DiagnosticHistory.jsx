@@ -41,38 +41,40 @@ const DiagnosticHistory = () => {
     const selectedPatient = useSelector((state) => state.data.selectedPatient);
 
     useEffect(() => {
-        if (selectedPatient) {
+        if (selectedPatient?.id) {
             dispatch(fetchDiagnosticHistory(selectedPatient.id));
         }
-    }, [dispatch, selectedPatient]);
+    }, [dispatch, selectedPatient?.id]);
 
     useEffect(() => {
         if (!selectedPatient || !selectedPatient.diagnosis_history) return;
 
         const diagnosisHistory = selectedPatient.diagnosis_history.slice(0, 6).reverse();
 
-        const initialValues = {
-            systolic: diagnosisHistory[0].blood_pressure.systolic.value,
-            diastolic: diagnosisHistory[0].blood_pressure.diastolic.value,
-            systolicLevels: diagnosisHistory[0].blood_pressure.systolic.levels,
-            diastolicLevels: diagnosisHistory[0].blood_pressure.diastolic.levels,
-            respiratoryRate: diagnosisHistory[0].respiratory_rate.value,
-            respiratoryRateLevels: diagnosisHistory[0].respiratory_rate.levels,
-            temperature: diagnosisHistory[0].temperature.value,
-            temperatureLevels: diagnosisHistory[0].temperature.levels,
-            heartRate: diagnosisHistory[0].heart_rate.value,
-            heartRateLevels: diagnosisHistory[0].heart_rate.levels,
-        };
-        dispatch(setClickedSystolicValue(initialValues.systolic));
-        dispatch(setSystolicLevels(initialValues.systolicLevels));
-        dispatch(setClickedDiastolicValue(initialValues.diastolic));
-        dispatch(setDiastolicLevels(initialValues.diastolicLevels));
-        dispatch(setRespiratoryRateValue(initialValues.respiratoryRate));
-        dispatch(setRespiratoryRateLevels(initialValues.respiratoryRateLevels));
-        dispatch(setTemperatureValue(initialValues.temperature));
-        dispatch(setTemperatureLevels(initialValues.temperatureLevels));
-        dispatch(setHeartRateValue(initialValues.heartRate));
-        dispatch(setHeartRateLevels(initialValues.heartRateLevels));
+        if (diagnosisHistory.length > 0) {
+            const initialValues = {
+                systolic: diagnosisHistory[0].blood_pressure.systolic.value,
+                diastolic: diagnosisHistory[0].blood_pressure.diastolic.value,
+                systolicLevels: diagnosisHistory[0].blood_pressure.systolic.levels,
+                diastolicLevels: diagnosisHistory[0].blood_pressure.diastolic.levels,
+                respiratoryRate: diagnosisHistory[0].respiratory_rate.value,
+                respiratoryRateLevels: diagnosisHistory[0].respiratory_rate.levels,
+                temperature: diagnosisHistory[0].temperature.value,
+                temperatureLevels: diagnosisHistory[0].temperature.levels,
+                heartRate: diagnosisHistory[0].heart_rate.value,
+                heartRateLevels: diagnosisHistory[0].heart_rate.levels,
+            };
+            dispatch(setClickedSystolicValue(initialValues.systolic));
+            dispatch(setSystolicLevels(initialValues.systolicLevels));
+            dispatch(setClickedDiastolicValue(initialValues.diastolic));
+            dispatch(setDiastolicLevels(initialValues.diastolicLevels));
+            dispatch(setRespiratoryRateValue(initialValues.respiratoryRate));
+            dispatch(setRespiratoryRateLevels(initialValues.respiratoryRateLevels));
+            dispatch(setTemperatureValue(initialValues.temperature));
+            dispatch(setTemperatureLevels(initialValues.temperatureLevels));
+            dispatch(setHeartRateValue(initialValues.heartRate));
+            dispatch(setHeartRateLevels(initialValues.heartRateLevels));
+        }
     }, [selectedPatient, dispatch]);
 
     if (error) return <div>Error: {error.message}</div>;
