@@ -1,5 +1,3 @@
-
-
 const MetricInfo = ({ color, label, value, levels, arrow }) => (
     <div className="flex flex-col gap-[8px]">
         <div className="flex gap-[4px] items-center">
